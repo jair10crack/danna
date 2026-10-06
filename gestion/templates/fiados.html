@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load formato static %}
+
+{% block contenido %}
+<div class="barra-pantalla">
+    <div class="titulo-pantalla sin-margen">Fiados</div>
+    <button type="button" class="boton" id="boton-nuevo-cliente">+ Nuevo cliente</button>
+</div>
+
+<div class="tarjeta bloque-total-cobrar">
+    <div class="etiqueta-grande">TOTAL POR COBRAR</div>
+    <div class="numero-grande">{{ total_por_cobrar|pesos }}</div>
+    <div class="nota-total">{{ filas|length }} clientes con saldo</div>
+</div>
+
+<table class="tabla tabla-clientes">
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Teléfono</th>
+            <th class="col-plata">Saldo</th>
+            <th>Último movimiento</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for fila in filas %}
+        <tr class="fila-cliente" data-url="{% url 'fiado_detalle' fila.cliente.id %}">
+            <td class="nombre-cliente">{{ fila.cliente.nombre }}</td>
+            <td>{{ fila.cliente.telefono }}</td>
+            <td class="plata saldo-fila">{{ fila.saldo|pesos }}</td>
+            <td>{{ fila.ultimo|date:"d/m/Y" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% include 'modal_cliente.html' %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/clientes.js' %}"></script>
+<script>
+document.querySelectorAll('.fila-cliente').forEach(function (fila) {
+    fila.addEventListener('click', function () {
+        location.href = fila.dataset.url;
+    });
+});
+</script>
+{% endblock %}

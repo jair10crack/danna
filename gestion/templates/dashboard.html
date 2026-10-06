@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load formato %}
+
+{% block contenido %}
+<div class="titulo-pantalla">Dashboard</div>
+
+<div class="rejilla-indicadores">
+    <div class="tarjeta indicador">
+        <div class="etiqueta-grande">Ventas de hoy</div>
+        <div class="numero-indicador">{{ ventas_hoy|pesos }}</div>
+    </div>
+    <div class="tarjeta indicador">
+        <div class="etiqueta-grande">Ventas de la semana</div>
+        <div class="numero-indicador">{{ ventas_semana|pesos }}</div>
+    </div>
+    <div class="tarjeta indicador">
+        <div class="etiqueta-grande">Total por cobrar</div>
+        <div class="numero-indicador">{{ total_por_cobrar|pesos }}</div>
+    </div>
+    <div class="tarjeta indicador">
+        <div class="etiqueta-grande">Productos agotados</div>
+        <div class="numero-indicador {% if agotados %}numero-alerta{% endif %}">{{ agotados }}</div>
+    </div>
+    <div class="tarjeta indicador">
+        <div class="etiqueta-grande">Por vencer (20 días)</div>
+        <div class="numero-indicador {% if por_vencer %}numero-aviso{% endif %}">{{ por_vencer }}</div>
+    </div>
+</div>
+
+<div class="tarjeta bloque-grafica">
+    <div class="etiqueta-grande">Ventas de los últimos 7 días</div>
+    <div class="grafica">
+        {% for barra in barras %}
+        <div class="columna">
+            <div class="valor-barra">{{ barra.valor|pesos }}</div>
+            <div class="barra" style="height: {{ barra.altura }}%"></div>
+            <div class="etiqueta-barra">{{ barra.etiqueta }}</div>
+            <div class="fecha-barra">{{ barra.fecha|date:"d/m" }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

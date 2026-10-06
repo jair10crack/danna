@@ -1,0 +1,4 @@
+Django==5.2.18
+whitenoise==6.8.2
+gunicorn==23.0.0
+django-browser-reload==1.18.0

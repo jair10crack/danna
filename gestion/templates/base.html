@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Hipermercado Danna</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body>
+    <div class="banner-demo">DEMOSTRACIÓN — Los datos se borran al reiniciar</div>
+    <nav class="menu-lateral">
+        <div class="menu-encabezado">Hipermercado Danna</div>
+        <a href="{% url 'venta' %}" class="{% if seccion == 'venta' %}activo{% endif %}">Venta</a>
+        <a href="{% url 'fiados' %}" class="{% if seccion == 'fiados' %}activo{% endif %}">Fiados</a>
+        <a href="{% url 'dashboard' %}" class="{% if seccion == 'dashboard' %}activo{% endif %}">Dashboard</a>
+        <a href="{% url 'productos' %}" class="{% if seccion == 'productos' %}activo{% endif %}">Productos</a>
+        <a href="{% url 'inventario' %}" class="{% if seccion == 'inventario' %}activo{% endif %}">Inventario</a>
+        <div class="menu-pie">
+            <div class="usuario-bloque">
+                <div class="usuario-inicial">{{ usuario.nombre|slice:":1" }}</div>
+                <div>
+                    <div class="usuario-nombre">{{ usuario.nombre }}</div>
+                    <div class="usuario-rol">{{ usuario.get_rol_display }}</div>
+                </div>
+            </div>
+            <a href="{% url 'reiniciar' %}" class="boton-pie" onclick="return confirm('Esto borra todo y vuelve a cargar los datos de ejemplo. ¿Continuar?')">Reiniciar demostración</a>
+            <a href="{% url 'logout' %}" class="enlace-pie">Salir</a>
+        </div>
+    </nav>
+    <main class="contenido">
+        {% block contenido %}
+        <div class="titulo-pantalla">{{ titulo }}</div>
+        {% endblock %}
+    </main>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

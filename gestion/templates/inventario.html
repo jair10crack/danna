@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load formato %}
+
+{% block contenido %}
+<div class="titulo-pantalla">Inventario bajo</div>
+
+<div class="seccion-inventario">
+    <div class="encabezado-seccion">
+        <span class="punto punto-rojo"></span>
+        Agotados
+        <span class="conteo-seccion">{{ agotados|length }}</span>
+    </div>
+    {% if agotados %}
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th class="col-plata">Stock</th>
+                <th class="col-plata">Mínimo</th>
+                <th>Proveedor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in agotados %}
+            <tr>
+                <td class="nombre-cliente">{{ p.nombre }}</td>
+                <td>{{ p.categoria.nombre }}</td>
+                <td class="plata texto-rojo">{{ p.stock|cantidad }}</td>
+                <td class="plata">{{ p.stock_minimo|cantidad }}</td>
+                <td>{{ p.proveedor.nombre|default:"—" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="seccion-vacia">Ningún producto agotado</div>
+    {% endif %}
+</div>
+
+<div class="seccion-inventario">
+    <div class="encabezado-seccion">
+        <span class="punto punto-amarillo"></span>
+        Bajo mínimo
+        <span class="conteo-seccion">{{ bajo_minimo|length }}</span>
+    </div>
+    {% if bajo_minimo %}
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th class="col-plata">Stock</th>
+                <th class="col-plata">Mínimo</th>
+                <th>Proveedor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in bajo_minimo %}
+            <tr>
+                <td class="nombre-cliente">{{ p.nombre }}</td>
+                <td>{{ p.categoria.nombre }}</td>
+                <td class="plata texto-amarillo">{{ p.stock|cantidad }}</td>
+                <td class="plata">{{ p.stock_minimo|cantidad }}</td>
+                <td>{{ p.proveedor.nombre|default:"—" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="seccion-vacia">Ningún producto bajo mínimo</div>
+    {% endif %}
+</div>
+{% endblock %}

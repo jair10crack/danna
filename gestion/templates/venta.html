@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contenido %}
+<div class="venta-buscador">
+    <input type="text" id="buscador" class="buscador-input" autofocus autocomplete="off"
+           placeholder="Escanee o escriba el código o nombre del producto">
+    <div id="resultados-busqueda" class="resultados-busqueda oculto"></div>
+</div>
+
+<div class="venta-layout">
+    <div class="venta-columna-izquierda">
+        <table class="tabla" id="tabla-venta">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cant.</th>
+                    <th>Precio</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="cuerpo-venta"></tbody>
+        </table>
+        <div id="venta-vacia" class="venta-vacia">Escanee un producto para comenzar</div>
+    </div>
+
+    <div class="venta-columna-derecha">
+        <div class="total-etiqueta">TOTAL</div>
+        <div class="total-numero" id="total-numero">$0</div>
+        <div class="subtotal-chico oculto" id="subtotal-chico"></div>
+
+        <div class="metodos-pago">
+            <button type="button" class="boton-metodo" data-metodo="EFECTIVO">Efectivo<span class="atajo">1</span></button>
+            <button type="button" class="boton-metodo" data-metodo="NEQUI">Nequi<span class="atajo">2</span></button>
+            <button type="button" class="boton-metodo" data-metodo="DAVIPLATA">Daviplata<span class="atajo">3</span></button>
+            <button type="button" class="boton-metodo" data-metodo="FIADO">Fiado<span class="atajo">4</span></button>
+        </div>
+
+        <div id="bloque-cliente" class="bloque-cliente oculto">
+            <select id="select-cliente"></select>
+            <div id="saldo-actual" class="saldo-actual"></div>
+            <span class="enlace-nuevo-cliente" id="boton-nuevo-cliente">+ Cliente nuevo</span>
+        </div>
+
+        <button type="button" id="boton-cobrar" class="boton boton-cobrar">Cobrar (F2)</button>
+    </div>
+</div>
+
+<div id="overlay-comprobante" class="overlay oculto">
+    <div class="comprobante">
+        <div class="comprobante-titulo">HIPERMERCADO DANNA</div>
+        <div class="comprobante-info" id="comprobante-info"></div>
+        <div class="comprobante-divisoria"></div>
+        <div id="comprobante-items"></div>
+        <div class="comprobante-divisoria"></div>
+        <div class="comprobante-total" id="comprobante-total"></div>
+        <div class="comprobante-metodo" id="comprobante-metodo"></div>
+        <div id="comprobante-saldo" class="comprobante-saldo oculto"></div>
+        <button type="button" id="boton-nueva-venta" class="boton comprobante-boton">Nueva venta (Enter)</button>
+    </div>
+</div>
+{% include 'modal_cliente.html' %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/clientes.js' %}"></script>
+<script src="{% static 'js/venta.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load formato static %}
+
+{% block contenido %}
+<a href="{% url 'fiados' %}" class="volver">&larr; Todos los fiados</a>
+
+<div class="detalle-encabezado">
+    <div>
+        <div class="titulo-pantalla sin-margen">{{ cliente.nombre }}</div>
+        <div class="detalle-sub">{{ cliente.documento }} &middot; {{ cliente.telefono }} &middot; {{ cliente.direccion }}</div>
+    </div>
+    <div class="detalle-saldo">
+        <div class="etiqueta-grande">SALDO ACTUAL</div>
+        <div class="numero-grande" id="saldo-cliente" data-saldo="{{ saldo }}">{{ saldo|pesos }}</div>
+        <button type="button" class="boton" id="boton-abonar">Registrar abono</button>
+    </div>
+</div>
+
+<table class="tabla">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Concepto</th>
+            <th class="col-plata">Cargo</th>
+            <th class="col-plata">Abono</th>
+            <th class="col-plata">Saldo</th>
+        </tr>
+    </thead>
+    <tbody id="cuerpo-movimientos">
+        {% for m in movimientos %}
+        <tr>
+            <td>{{ m.fecha_movimiento|date:"d/m/Y H:i" }}</td>
+            <td>{% if m.venta %}Venta {{ m.venta.numero }}{% else %}{{ m.observacion|default:"Movimiento" }}{% endif %}</td>
+            <td class="plata">{% if m.tipo == 'CARGO' %}{{ m.valor|pesos }}{% endif %}</td>
+            <td class="plata texto-verde">{% if m.tipo == 'ABONO' %}{{ m.valor|pesos }}{% endif %}</td>
+            <td class="plata">{{ m.saldo_nuevo|pesos }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div id="overlay-abono" class="overlay oculto">
+    <div class="modal-abono">
+        <div class="modal-titulo">Registrar abono</div>
+        <div class="modal-cliente">{{ cliente.nombre }}</div>
+
+        <div class="campo-abono">
+            <label>Saldo del cliente</label>
+            <div class="valor-fijo plata" id="abono-saldo"></div>
+        </div>
+        <div class="campo-abono">
+            <label for="abono-valor">Valor que abona</label>
+            <input type="text" id="abono-valor" autocomplete="off">
+        </div>
+        <div class="campo-abono">
+            <label for="abono-efectivo">Efectivo recibido</label>
+            <input type="text" id="abono-efectivo" autocomplete="off">
+        </div>
+        <div class="campo-abono campo-vueltas">
+            <label>Vueltas</label>
+            <div class="valor-fijo plata" id="abono-vueltas">$0</div>
+        </div>
+
+        <div id="abono-error" class="abono-error oculto"></div>
+
+        <div class="modal-botones">
+            <button type="button" class="boton boton-secundario" id="abono-cancelar">Cancelar</button>
+            <button type="button" class="boton" id="abono-confirmar">Confirmar abono</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>window.CLIENTE_ID = {{ cliente.id }};</script>
+<script src="{% static 'js/fiados.js' %}"></script>
+{% endblock %}

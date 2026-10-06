@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Hipermercado Danna</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body>
+    <div class="banner-demo">DEMOSTRACIÓN — Los datos se borran al reiniciar</div>
+    <div class="login-contenedor">
+        <div class="login-tarjeta">
+            <div class="login-logo">Hipermercado Danna</div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="codigo" class="login-codigo" autofocus>
+                {% if error %}<p class="login-error">{{ error }}</p>{% endif %}
+                <button type="submit" class="boton">Entrar</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

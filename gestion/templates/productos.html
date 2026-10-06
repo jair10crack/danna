@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load formato static %}
+
+{% block contenido %}
+<div class="barra-pantalla">
+    <div class="titulo-pantalla sin-margen">Productos</div>
+    <button type="button" class="boton" id="boton-nuevo">+ Nuevo producto</button>
+</div>
+
+<form method="get" class="barra-busqueda">
+    <input type="text" name="q" value="{{ q }}" placeholder="Buscar por nombre, marca o código" autofocus autocomplete="off">
+    <button type="submit" class="boton boton-secundario">Buscar</button>
+    {% if q %}<a href="{% url 'productos' %}" class="enlace-limpiar">Limpiar</a>{% endif %}
+</form>
+
+<table class="tabla">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th class="col-plata">Compra</th>
+            <th class="col-plata">Venta</th>
+            <th class="col-plata">Stock</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in productos %}
+        <tr class="fila-producto"
+            data-id="{{ p.id }}"
+            data-codigo_interno="{{ p.codigo_interno }}"
+            data-codigo_barras="{{ p.codigo_barras|default_if_none:'' }}"
+            data-nombre="{{ p.nombre }}"
+            data-marca="{{ p.marca }}"
+            data-categoria_id="{{ p.categoria_id }}"
+            data-tipo_venta="{{ p.tipo_venta }}"
+            data-precio_compra="{{ p.precio_compra|floatformat:0 }}"
+            data-precio_venta="{{ p.precio_venta|floatformat:0 }}"
+            data-stock="{{ p.stock }}"
+            data-stock_minimo="{{ p.stock_minimo }}"
+            data-proveedor_id="{{ p.proveedor_id|default_if_none:'' }}"
+            data-fecha_vencimiento="{{ p.fecha_vencimiento|date:'Y-m-d' }}">
+            <td class="codigo-celda">{{ p.codigo_interno }}</td>
+            <td class="nombre-cliente">{{ p.nombre }} <span class="resultado-marca">{{ p.marca }}</span></td>
+            <td>{{ p.categoria.nombre }}</td>
+            <td class="plata">{{ p.precio_compra|pesos }}</td>
+            <td class="plata">{{ p.precio_venta|pesos }}</td>
+            <td class="plata {% if p.stock <= 0 %}texto-rojo{% elif p.stock < p.stock_minimo %}texto-amarillo{% endif %}">{{ p.stock|cantidad }}</td>
+            <td class="celda-accion"><span class="editar-producto">Editar</span></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="seccion-vacia">Ningún producto coincide con la búsqueda</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div id="overlay-producto" class="overlay oculto">
+    <div class="modal-producto">
+        <div class="modal-titulo" id="modal-titulo-producto">Nuevo producto</div>
+
+        <div class="rejilla-formulario">
+            <div class="campo">
+                <label for="f-nombre">Nombre</label>
+                <input type="text" id="f-nombre" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label for="f-marca">Marca</label>
+                <input type="text" id="f-marca" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label for="f-codigo_interno">Código interno</label>
+                <input type="text" id="f-codigo_interno" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label for="f-codigo_barras">Código de barras</label>
+                <input type="text" id="f-codigo_barras" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label for="f-categoria_id">Categoría</label>
+                <select id="f-categoria_id">
+                    {% for c in categorias %}<option value="{{ c.id }}">{{ c.nombre }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="campo">
+                <label for="f-tipo_venta">Se vende por</label>
+                <select id="f-tipo_venta">
+                    <option value="UNIDAD">Unidad</option>
+                    <option value="PESO">Peso (kg)</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="f-precio_compra">Precio de compra</label>
+                <input type="text" id="f-precio_compra" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label for="f-precio_venta">Precio de venta</label>
+                <input type="text" id="f-precio_venta" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label for="f-stock">Stock actual</label>
+                <input type="text" id="f-stock" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label for="f-stock_minimo">Stock mínimo</label>
+                <input type="text" id="f-stock_minimo" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label for="f-proveedor_id">Proveedor</label>
+                <select id="f-proveedor_id">
+                    <option value="">Sin proveedor</option>
+                    {% for pr in proveedores %}<option value="{{ pr.id }}">{{ pr.nombre }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="campo">
+                <label for="f-fecha_vencimiento">Vence el</label>
+                <input type="date" id="f-fecha_vencimiento">
+            </div>
+        </div>
+
+        <div class="margen-calculado" id="margen-calculado"></div>
+        <div id="error-producto" class="abono-error oculto"></div>
+
+        <div class="modal-botones">
+            <button type="button" class="boton boton-secundario" id="producto-cancelar">Cancelar</button>
+            <button type="button" class="boton" id="producto-guardar">Guardar</button>
+        </div>
+        <div class="zona-eliminar oculto" id="zona-eliminar">
+            <span class="enlace-eliminar" id="producto-eliminar">Eliminar este producto</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/productos.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,36 @@
+<div id="overlay-cliente" class="overlay oculto">
+    <div class="modal-abono">
+        <div class="modal-titulo">Nuevo cliente</div>
+        <div class="modal-cliente">Queda habilitado para fiar de una vez</div>
+
+        <div class="rejilla-formulario">
+            <div class="campo">
+                <label for="c-nombre">Nombre completo</label>
+                <input type="text" id="c-nombre" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label for="c-telefono">Teléfono</label>
+                <input type="text" id="c-telefono" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label for="c-documento">Documento</label>
+                <input type="text" id="c-documento" autocomplete="off">
+            </div>
+            <div class="campo">
+                <label for="c-limite">Límite de crédito</label>
+                <input type="text" id="c-limite" value="500000" autocomplete="off">
+            </div>
+            <div class="campo campo-ancho">
+                <label for="c-direccion">Dirección</label>
+                <input type="text" id="c-direccion" autocomplete="off">
+            </div>
+        </div>
+
+        <div id="error-cliente" class="abono-error oculto"></div>
+
+        <div class="modal-botones">
+            <button type="button" class="boton boton-secundario" id="cliente-cancelar">Cancelar</button>
+            <button type="button" class="boton" id="cliente-guardar">Guardar cliente</button>
+        </div>
+    </div>
+</div>
